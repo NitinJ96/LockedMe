@@ -1,4 +1,4 @@
-package com.lockedme.comparator;
+package com.lockedme.fileoperations;
 
 import java.util.Comparator;
 

@@ -3,10 +3,13 @@ package com.lockedme.maindriver;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.lockedme.fileoperations.FileOperations;
+
 public class LockedMeDriver {
 
 	private static Scanner scanner = new Scanner(System.in);
-	private final static String FILEPATH=null;
+	private static String filepath=null;
+	private static FileOperations fileOperations = new FileOperations();
 
 	public static void main(String[] args) throws InputMismatchException, Exception {
 		boolean quit = false;
@@ -14,7 +17,7 @@ public class LockedMeDriver {
 		applicationDetails();
 		printInstructions();
 		while (!quit) {
-			System.out.print("\nEnter an choice from the options: ");
+			System.out.print("\nEnter a choice from the options: ");
 			choice = scanner.nextInt();
 			scanner.nextLine();
 			switch (choice) {
@@ -27,6 +30,9 @@ public class LockedMeDriver {
 					break;
 				case 3:
 					quit = true;
+					break;
+				default:
+					System.out.println("Kindly enter from the options specified");
 					break;
 			}
 		}
@@ -56,16 +62,15 @@ public class LockedMeDriver {
 		System.out.println("\t B - To 'delete' a file form the existing directory/folder");
 		System.out.println("\t C - To 'search' a file form the existing directory/folder");
 		System.out.println("\t D - To return to the main context");
-		System.out.println("Disclaimer: Options are case insensitive");
+		System.out.println("Note: Options are case insensitive");
 	}
 	
 	private static void userInterfaceOptions() {
 		boolean quit = false;
 		while (!quit) {
 			System.out.print("\nPlease enter your choice of operation: ");
-			String option = scanner.next();
-			scanner.nextLine();
-			switch (option) {
+			String option = scanner.nextLine();
+			switch (option.toLowerCase()) {
 				case "a":
 					addFile();
 					break;
@@ -84,18 +89,51 @@ public class LockedMeDriver {
 	}
 
 	private static void listFiles() {
-		
+		filepath = changeFilePath();
+		fileOperations.listFiles(filepath);
 	}
 
 	private static void addFile() {
-		System.out.println("ADD");
+		filepath = changeFilePath();
+		System.out.print("\nEnter the name of the file to be added: ");
+		String fileName = scanner.nextLine();
+		fileOperations.addFile(filepath, fileName);
+		
 	}
 
 	private static void deleteFile() {
-		System.out.println("Delete");
+		filepath = changeFilePath();
+		System.out.print("\nEnter the name of the file to be deleted: ");
+		String fileName = scanner.nextLine();
+		fileOperations.deteleFile(filepath, fileName);
 	}
 
 	private static void searchFile() {
-		System.out.println("Search");
+		filepath = changeFilePath();
+		System.out.print("\nEnter the name of the file to be searched: ");
+		String fileName = scanner.nextLine();
+		fileOperations.searchFile(filepath, fileName);
+	}
+	
+	private static String changeFilePath() {
+		if(filepath!=null) {
+			System.out.print("\nTo change your Filepath/Directiry path, Enter 'Y', else 'N': ");
+			String option = scanner.nextLine().trim();
+			switch(option.toLowerCase()) {
+				case "y":
+					System.out.print("\nEnter the new Filepath/Directiry path: ");
+					filepath = scanner.nextLine();
+					break;
+				case "n":
+					break;
+				default:
+					System.out.println("Enter the proper option");
+					break;
+			}
+		}else {
+			System.out.print("\nEnter the Filepath/Directiry path: ");
+			filepath = scanner.nextLine();
+		}
+		return filepath;
 	}
 }

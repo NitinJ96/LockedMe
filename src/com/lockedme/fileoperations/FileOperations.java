@@ -36,7 +36,7 @@ public class FileOperations {
 			}
 			if (!folderNames.isEmpty()) {
 				Collections.sort(folderNames,new SortByFileName());
-				System.out.print("\nList of all folders:");
+				System.out.println("\nList of all folders:");
 				folderNames.forEach(System.out::println);
 			} else
 				System.out.println("\nNo directorys or folder present");
@@ -119,13 +119,16 @@ public class FileOperations {
 	*/
 	public void deteleFile(String filePath, String fileName) {
 		try {
-			if(options(filePath, fileName, "delete")) {
+			int check = options(filePath, fileName, "search");
+			if(check==1) {
 				System.out.println(fileName+".txt deleted");
-			}else {
+			}else if(check==0) {
 				System.out.println("File not Found in the directory");
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
+			System.out.println("The system cannot find the path specified");
+		}catch (NullPointerException e) {
 			System.out.println("The system cannot find the path specified");
 		}
 	}
@@ -138,13 +141,15 @@ public class FileOperations {
 	*/
 	public void searchFile(String filePath, String fileName) {
 		try {
-			if(options(filePath, fileName, "search")) {
+			int check = options(filePath, fileName, "search");
+			if(check==1) {
 				System.out.println(fileName+".txt is found in the directory");
-			}else {
+			}else if(check==0){
 				System.out.println("File not Found in the directory");
 			}
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.out.println("The system cannot find the path specified");
+		}catch (NullPointerException e) {
 			System.out.println("The system cannot find the path specified");
 		}
 	}
@@ -157,29 +162,27 @@ public class FileOperations {
 	* @param fileName is name of the file to be created
 	* @param option determines the mode of operation - either 'deletion' or 'searching'
 	*/
-	private boolean options(String filePath, String fileName, String option) throws FileNotFoundException {
-		boolean flag = false;
+	private int options(String filePath, String fileName, String option) throws FileNotFoundException, NullPointerException {
+		int flag = 0;
 		try {
 			File folder = new File(filePath);
 			if(folder.exists()&&folder.isDirectory()) {
 				File[] fileFolderList = folder.listFiles();
 				for (File file : fileFolderList) {
 					if (file.isFile()&&file.getName().equals(fileName+".txt")&&option.equals("search")) {
-						flag = true;
+						flag = 1;
 						break;
 					}
 					if(file.isFile()&&file.getName().equals(fileName+".txt")&&option.equals("delete")) {
 						file.delete();
-						flag=true;
+						flag=1;
 						break;
 					}
 				}
 			}else {
+				flag = 2;
 				System.out.println("Invalid Directory");
 			}
-			
-		}catch (NullPointerException e) {
-			System.out.println("The system cannot find the path specified");
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

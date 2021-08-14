@@ -48,7 +48,7 @@ public class FileOperations {
 			} else
 				System.out.print("\nNo Files present");
 		} catch (NullPointerException e) {
-			System.out.println("Enter the proper Directory");
+			System.out.println("Enter a valid directory path");
 		}catch (Exception e){
 			e.printStackTrace();
 		}
